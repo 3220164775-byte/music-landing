@@ -107,14 +107,14 @@ window.createTurntable = function ({ audio, getTrack, toggle, onStateChange, ann
   });
   function setScrollProgress(progress) {
     scrollProgress = progress;
-    scrollMotion = progress > .025 && progress < .98 && !motion.matches;
+    scrollMotion = progress >= .105 && progress < .98 && !motion.matches;
     stage.classList.toggle('tt-scroll-playing', scrollMotion);
     if (progress > .015 && !motion.matches) {
       clearTimeout(armTimer);
-      const t = Math.min(1, Math.max(0, (progress - .015) / .145));
+      const t = Math.min(1, Math.max(0, (progress - .015) / .09));
       const eased = t * t * (3 - 2 * t);
       arm.style.transition = 'none';
-      arm.style.transform = `rotate(${-14 + 24 * eased + Math.max(0, progress - .16) * 4}deg)`;
+      arm.style.transform = `rotate(${-14 + 24 * eased + Math.max(0, progress - .105) * 4}deg)`;
     } else {
       arm.style.removeProperty('transition');
       arm.style.removeProperty('transform');

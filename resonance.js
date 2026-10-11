@@ -137,6 +137,7 @@ window.createGlobalConnections = function ({audio,getTrack}) {
   function activateAudio(){
     if(!context){const AudioContext=window.AudioContext||window.webkitAudioContext;if(!AudioContext)return;try{context=new AudioContext();const source=context.createMediaElementSource(audio);analyser=context.createAnalyser();analyser.fftSize=256;analyser.smoothingTimeConstant=.35;source.connect(analyser);analyser.connect(context.destination);frequencies=new Uint8Array(analyser.frequencyBinCount);}catch(_){context=null;analyser=null;}}
     if(context?.state==='suspended')context.resume().catch(()=>{});
+    return context;
   }
   function sync(){
     const playing=!audio.paused&&!!getTrack(),audible=playing&&!audio.muted&&audio.volume>0;

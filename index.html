@@ -9,20 +9,21 @@
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./turntable.css">
-  <link rel="stylesheet" href="./intro.css">
-  <link rel="stylesheet" href="./journey.css?v=20261011-cover2">
+  <link rel="stylesheet" href="./intro.css?v=20261011-violetreflections16">
+  <link rel="stylesheet" href="./journey.css?v=20261011-gears19">
   <link rel="stylesheet" href="./resonance.css?v=20261011-cosmos10">
   <link rel="stylesheet" href="./stage-theme.css?v=20261011-cosmos10">
-  <script src="./turntable.js" defer></script>
-  <script src="./intro.js?v=20261011-water7" defer></script>
+  <script src="./turntable.js?v=20261011-submerged1" defer></script>
+  <script src="./intro.js?v=20261011-reflections15" defer></script>
   <script src="./assets/world-land.js" defer></script>
   <script src="./assets/cover-catalog.js?v=20261011-cover2" defer></script>
-  <script src="./journey.js?v=20261011-cover2" defer></script>
-  <script src="./resonance.js?v=20261011-cosmos10" defer></script>
-  <script src="./app.js?v=20261011-cosmos10" defer></script>
+  <script src="./assets/song-artwork-catalog.js?v=20261011-waterworld11" defer></script>
+  <script src="./journey.js?v=20261011-gears19" defer></script>
+  <script src="./resonance.js?v=20261011-gears19" defer></script>
+  <script src="./app.js?v=20261011-gears19" defer></script>
 </head>
 <body>
-  <svg class="water-filter-defs" width="0" height="0" aria-hidden="true"><defs><filter id="intro-water-refraction" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage id="water-displacement-image" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="waterNormals"/><feDisplacementMap id="water-displacement" in="SourceGraphic" in2="waterNormals" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
+  <svg class="water-filter-defs" width="0" height="0" aria-hidden="true"><defs><filter id="intro-water-refraction" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage id="water-displacement-image" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="waterNormals"/><feDisplacementMap id="water-displacement" in="SourceGraphic" in2="waterNormals" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="intro-reflection-refraction" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage id="water-reflection-displacement-image" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="reflectionNormals"/><feDisplacementMap in="SourceGraphic" in2="reflectionNormals" scale="42" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="intro-reflection-color" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0.136064 0.457728 0.046208 0 0.09  0.119056 0.400512 0.040432 0 0.075  0.123308 0.414816 0.041876 0 0.36  0 0 0 1 0"/></filter></defs></svg>
   <a class="skip-link" href="#main">跳到主要内容</a>
   <header class="site-header">
     <nav class="ticket-nav" aria-label="主导航">
@@ -49,6 +50,7 @@
           <button class="button button-pink" id="hero-play" type="button"><span class="play-icon" aria-hidden="true">▶</span><span id="hero-play-label">开启声音 · 向下探索</span><span class="button-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button>
         </div>
       </div>
+      <div class="submerged-scene">
       <div class="record-stage" id="hero-turntable">
         <div class="record-caption" aria-hidden="true"><span>EVERY SOUND.<br>EVERY STORY.</span><span class="record-star">✳</span></div>
         <div class="tt-wrap">
@@ -71,6 +73,8 @@
         </div>
         <p class="tt-hint" id="turntable-hint"><span class="tt-hint-icon" aria-hidden="true">↓</span><span id="turntable-hint-text">向下滑动，让唱针落下。</span></p>
       </div>
+      </div>
+    <div class="intro-water" aria-hidden="true"><div class="underwater-volume"></div><div class="water-reflections"></div><canvas id="intro-water-surface"></canvas><div class="water-surface-shade"></div></div>
       <div class="hero-footer"><a class="scroll-cue" href="#experience"><span class="scroll-circle" aria-hidden="true">↓</span><span>向下探索<br><small>SCROLL TO FEEL</small></span></a><span class="hero-note">戴上耳机，世界是你的。<span aria-hidden="true">↘</span></span></div>
       <div class="cursor-trail" id="cursor-trail" aria-hidden="true"></div>
     </section>
@@ -83,7 +87,6 @@
       <span class="cover-backdrop" aria-hidden="true">SOUND IN SIGHT.</span>
       <div class="cover-footer"><div class="cover-current"><span class="cover-index" id="cover-index">01 / 18</span><strong id="cover-current-title">七里香</strong><span id="cover-stream-status" role="status">封面错落飘落 · 悬停即可停住</span></div><a class="cover-next" href="#world">下一站，环球音乐 <span aria-hidden="true">↓</span></a><button class="cover-motion-toggle" id="cover-motion-toggle" type="button" aria-pressed="false">Ⅱ 暂停飘落</button></div>
     </section>
-    <div class="intro-water" aria-hidden="true"><canvas id="intro-water-surface"></canvas></div>
     <div class="intro-progress" aria-hidden="true"><span>01</span><div><i></i></div><span>02</span></div>
     </div>
     </div>
@@ -97,7 +100,7 @@
           <div class="globe-stage" id="globe-stage"><canvas id="music-globe" tabindex="0" role="img" aria-label="可旋转的音乐地球，鼠标悬停并移动即可旋转，手机滑动或使用方向键旋转，使用下方国家按钮选择歌手"></canvas><div class="globe-pins" id="globe-pins"></div><span class="globe-lens-label" aria-hidden="true">FISHEYE / SOUND ATLAS</span></div>
           <div class="globe-tools"><button id="globe-left" type="button" aria-label="地球向左转动">←</button><span><span class="globe-mouse-instructions">移动鼠标 · 悬停歌手</span><span class="globe-touch-instructions">滑动地球 · 点选歌手</span><br><small>MOVE TO EXPLORE / HOVER TO MEET</small></span><button id="globe-right" type="button" aria-label="地球向右转动">→</button></div>
         </div>
-        <aside class="artist-panel" aria-labelledby="world-artist-name"><div class="artist-profile"><span class="artist-profile-label">ARTIST SPOTLIGHT / 歌手主页</span><div class="artist-title-row"><h3 id="world-artist-name">周杰伦</h3><span id="world-artist-region">中国 · 台北</span></div><p id="world-artist-album">七里香 / COMMON JASMINE ORANGE</p></div><div class="song-cylinder" id="world-song-list" role="group" aria-label="歌手歌曲列表"></div><p class="artist-song-note" id="world-song-note" role="status">曲目展示 · 完整音乐请在客户端收听</p></aside>
+        <aside class="artist-panel" aria-labelledby="world-artist-name"><div class="artist-profile"><span class="artist-profile-label">ARTIST SPOTLIGHT / 歌手主页</span><div class="artist-title-row"><h3 id="world-artist-name">周杰伦</h3><span id="world-artist-region">中国 · 台北</span></div><p id="world-artist-album">七里香 / COMMON JASMINE ORANGE</p></div><div class="song-cylinder" id="world-song-list" role="group" tabindex="0" aria-label="歌手歌曲列表，可上下滚动"></div><div class="song-scroll-controls"><span>上下滚动歌单 ↕</span><button class="song-gear-toggle" id="song-gear-toggle" type="button" aria-pressed="false">开启齿轮音效</button></div><p class="artist-song-note" id="world-song-note" role="status">曲目展示 · 完整音乐请在客户端收听</p></aside>
       </div>
       <div class="world-footer"><span>选择一个国家，启程。</span><div class="world-regions" id="world-regions" role="group" aria-label="按国家选择歌手"></div></div>
     </section>

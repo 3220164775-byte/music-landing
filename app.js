@@ -94,9 +94,13 @@ async function playTrack(track, { fromScroll = false } = {}) {
     audio.pause();
     if (fromScroll && error.name === 'NotAllowedError') {
       document.documentElement.classList.add('scroll-audio-blocked');
-      miniPlayer.hidden = true;
-      document.body.classList.remove('has-player');
+      // Wheel scrolling cannot grant audio permission. Keep a usable play
+      // control visible after the opening controls fade during the transition.
+      miniPlayer.hidden = false;
+      document.body.classList.add('has-player');
       syncPlaybackUI();
+      document.getElementById('player-title').textContent = '点击播放，开启声音';
+      playerToggle.setAttribute('aria-label', '开启声音并播放试听');
       audioStatus.textContent = '点击开启声音，即可跟随音乐探索。';
       return;
     }
@@ -197,7 +201,7 @@ turntable = window.createTurntable({
 
 resonance = window.createGlobalConnections({ audio, getTrack: () => currentTrack });
 const coverStream = window.createCoverStream({ records: window.coverRecords });
-const musicGlobe = window.createMusicGlobe();
+const musicGlobe = window.createMusicGlobe({ audio, getAudioContext: () => resonance.activateAudio() });
 window.createIntroSequence({
   turntable,
   onProgress: progress => coverStream.setVisible(progress >= .54),

@@ -14,6 +14,7 @@ window.createCoverStream = function ({ records }) {
   let revealed = false;
   let inView = true;
   let lastTitle = '';
+  let layout = null;
   const smooth = (a, b, v) => { const t = Math.max(0, Math.min(1, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
   const placements = [
     { x: .12, y: .19, angle: -21, size: .96 },
@@ -100,17 +101,25 @@ window.createCoverStream = function ({ records }) {
     render();
   }
   function render() {
-    const width = stage.clientWidth, height = stage.clientHeight;
+    // Read sizes together, only when layout changes, before writing transforms.
+    if (!layout) {
+      layout = {
+        width: stage.clientWidth,
+        height: stage.clientHeight,
+        footerTop: document.querySelector('.cover-footer').getBoundingClientRect().top - section.getBoundingClientRect().top,
+        cardHeights: cards.map(card => card.button.clientHeight),
+      };
+    }
+    const { width, height, footerTop, cardHeights } = layout;
     const positions = width < 650 ? phonePlacements : placements;
-    const footerTop = document.querySelector('.cover-footer').getBoundingClientRect().top - section.getBoundingClientRect().top;
     cards.forEach(card => {
       const position = positions[card.index];
-      const t = motion.matches ? 1 : Math.min(1, Math.max(0, (clock - card.index * .17) / (1.9 + card.index * .03)));
+      const t = motion.matches ? 1 : Math.min(1, Math.max(0, (clock - card.index * .065) / (.95 + card.index * .012)));
       const drop = settle(t);
-      const initialY = -card.button.clientHeight * position.size * .75;
+      const initialY = -cardHeights[card.index] * position.size * .75;
       const drift = t === 1 && !motion.matches ? Math.sin(clock * .65 + card.index * 1.7) * 4 : 0;
       const x = width * position.x + Math.sin(card.index * 2.3) * (1 - t) * 70;
-      const restingY = card.index > 3 ? Math.min(height * position.y, footerTop - card.button.clientHeight * position.size / 2 - 12) : height * position.y;
+      const restingY = card.index > 3 ? Math.min(height * position.y, footerTop - cardHeights[card.index] * position.size / 2 - 12) : height * position.y;
       const y = initialY + (restingY - initialY) * drop + drift;
       const angle = position.angle + (1 - t) * (card.index % 2 ? 42 : -36) + (t === 1 ? Math.sin(clock * .4 + card.index) * 1.2 : 0);
       const focused = card.track.id === (held || pinned);
@@ -132,7 +141,7 @@ window.createCoverStream = function ({ records }) {
   }
   function tick(now) {
     frame = null;
-    const dt = last ? Math.min((now - last) / 1000, .05) : 0;
+    const dt = last ? Math.min((now - last) / 1000, .1) : 0;
     last = now;
     if (!manuallyPaused && !held && !pinned) clock += dt;
     render();
@@ -149,13 +158,14 @@ window.createCoverStream = function ({ records }) {
     if (inView) start(); else stop();
   }).observe(section);
   document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
-  window.addEventListener('resize', render);
-  motion.addEventListener('change', () => { if (motion.matches) stop(); else start(); updateHold(); });
+  window.addEventListener('resize', () => { layout = null; render(); });
+  new ResizeObserver(() => { layout = null; render(); }).observe(stage);
+  motion.addEventListener('change', () => { layout = null; if (motion.matches) stop(); else start(); updateHold(); });
   updateHold();
-  return { setVisible(value) { revealed = value; if (value) start(); else stop(); } };
+  return { setVisible(value) { if (value !== revealed) layout = null; revealed = value; if (value) start(); else stop(); } };
 };
 
-window.createMusicGlobe = function () {
+window.createMusicGlobe = function ({ audio, getAudioContext } = {}) {
   const artists = [
     { id: 'jay', name: '周杰伦', initials: 'JAY', country: '中国', code: 'CN', city: '台北', lat: 25.03, lon: 121.56, offset: [-35, 28], color: '#f5b99e', album: '七里香 / COMMON JASMINE ORANGE', songs: ['我的地盘', '七里香', '借口', '搁浅', '园游会', '止战之殇'] },
     { id: 'utada', name: '宇多田光', initials: 'HU', country: '日本', code: 'JP', city: '东京', lat: 35.68, lon: 139.69, offset: [26, 12], color: '#aecce9', album: 'FIRST LOVE', songs: ['Automatic', "Movin’ on without you", 'In My Room', 'First Love', 'time will tell', 'B&C'] },
@@ -175,6 +185,69 @@ window.createMusicGlobe = function () {
   const regions = document.getElementById('world-regions');
   const panel = document.querySelector('.artist-panel');
   const songs = document.getElementById('world-song-list');
+  const gearToggle = document.getElementById('song-gear-toggle');
+  let songStep = 1, previousScroll = 0, scrollInputUntil = 0;
+  let gearEnabled = true, gearContext = null, gearOutput = null, gearNoise = null;
+  let toothDistance = 0, lastTooth = -1, gearTicks = 0;
+  function syncGear() {
+    const ready = gearEnabled && gearContext?.state === 'running';
+    gearToggle.setAttribute('aria-pressed', String(ready));
+    gearToggle.textContent = !gearEnabled ? '齿轮音效 · 关' : ready ? '齿轮音效 · 开' : '开启齿轮音效';
+    songs.dataset.gearState = !gearEnabled ? 'off' : ready ? audio?.muted ? 'muted' : 'ready' : 'locked';
+    if (gearOutput) gearOutput.gain.setTargetAtTime(gearEnabled && !audio?.muted ? .16 : 0, gearContext.currentTime, .01);
+  }
+  function armGear() {
+    if (!gearEnabled || !getAudioContext) return;
+    gearContext = getAudioContext();
+    if (!gearContext) return;
+    if (!gearOutput) {
+      gearOutput = gearContext.createGain(); gearOutput.connect(gearContext.destination);
+      gearNoise = gearContext.createBuffer(1, Math.ceil(gearContext.sampleRate * .065), gearContext.sampleRate);
+      const samples = gearNoise.getChannelData(0);
+      for (let i = 0; i < samples.length; i++) samples[i] = (Math.random() * 2 - 1) * Math.exp(-i / (samples.length * .18));
+      gearContext.addEventListener('statechange', syncGear);
+    }
+    syncGear();
+  }
+  function gearTooth(distance) {
+    if (!gearEnabled || audio?.muted || !gearContext || gearContext.state !== 'running' || document.hidden) return;
+    toothDistance += distance;
+    const time = gearContext.currentTime;
+    if (toothDistance < 14 || time - lastTooth < .035) return;
+    toothDistance %= 14; lastTooth = time;
+    const source = gearContext.createBufferSource(), filter = gearContext.createBiquadFilter(), envelope = gearContext.createGain();
+    source.buffer = gearNoise; filter.type = 'bandpass'; filter.frequency.value = 1900; filter.Q.value = 1.6;
+    envelope.gain.setValueAtTime(.8, time); envelope.gain.exponentialRampToValueAtTime(.001, time + .065);
+    source.connect(filter); filter.connect(envelope); envelope.connect(gearOutput);
+    const metal = gearContext.createOscillator(), ring = gearContext.createGain();
+    metal.type = 'triangle'; metal.frequency.setValueAtTime(1100, time); metal.frequency.exponentialRampToValueAtTime(360, time + .045);
+    ring.gain.setValueAtTime(.24, time); ring.gain.exponentialRampToValueAtTime(.001, time + .055);
+    metal.connect(ring); ring.connect(gearOutput); metal.start(time); metal.stop(time + .065); source.start(time);
+    source.onended = () => { source.disconnect(); filter.disconnect(); envelope.disconnect(); };
+    metal.onended = () => { metal.disconnect(); ring.disconnect(); };
+    songs.dataset.gearTicks = String(++gearTicks);
+  }
+  function beginSongScroll() { scrollInputUntil = performance.now() + 1200; armGear(); }
+  songs.addEventListener('wheel', beginSongScroll, { passive: true });
+  songs.addEventListener('pointerdown', beginSongScroll, { passive: true });
+  songs.addEventListener('touchmove', () => { scrollInputUntil = performance.now() + 1200; }, { passive: true });
+  songs.addEventListener('scroll', () => {
+    const delta = Math.abs(songs.scrollTop - previousScroll); previousScroll = songs.scrollTop;
+    curveSongs();
+    if (performance.now() < scrollInputUntil) gearTooth(delta);
+  }, { passive: true });
+  songs.addEventListener('keydown', event => {
+    if (!['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault(); beginSongScroll();
+    const direction = ['ArrowUp', 'PageUp'].includes(event.key) ? -1 : 1;
+    const top = event.key === 'Home' ? 0 : event.key === 'End' ? songStep * 5 : songs.scrollTop + direction * songStep * (event.key.startsWith('Page') ? 2 : 1);
+    songs.scrollTo({ top, behavior: motion.matches ? 'instant' : 'smooth' });
+  });
+  gearToggle.addEventListener('click', () => {
+    gearEnabled = !(gearEnabled && gearContext?.state === 'running');
+    if (gearEnabled) armGear(); else syncGear();
+  });
+  audio?.addEventListener('volumechange', syncGear);
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const radians = Math.PI / 180;
   const distance = 2.7;
@@ -232,14 +305,19 @@ window.createMusicGlobe = function () {
     document.getElementById('world-artist-album').textContent = artist.album;
     document.getElementById('world-song-note').textContent = '曲目展示 · 完整音乐请在客户端收听';
     songs.replaceChildren();
+    const scrollTrack = document.createElement('div'); scrollTrack.className = 'song-scroll-track'; scrollTrack.setAttribute('aria-hidden', 'true'); songs.append(scrollTrack);
     artist.songs.forEach((title, index) => {
       const row = document.createElement('button');
       row.type = 'button'; row.className = 'world-song'; row.setAttribute('aria-label', `查看${artist.name}的歌曲 ${title}`); row.setAttribute('aria-pressed', 'false');
       const number = document.createElement('span'); number.className = 'world-song-number'; number.textContent = String(index + 1).padStart(2, '0');
       const art = document.createElement('span'); art.className = 'world-song-art'; art.setAttribute('aria-hidden', 'true');
       const record = window.coverRecords?.find(record => record.id === artist.id);
-      if (record) {
-        const image = document.createElement('img'); image.src = record.artwork; image.alt = ''; image.referrerPolicy = 'no-referrer';
+      const isTransitionSong = artist.id === 'jay' && title === '七里香';
+      const artwork = isTransitionSong && record?.displayArtwork
+        ? record.displayArtwork : window.songArtworkCatalog?.[artist.id]?.[index]?.artwork || record?.artwork;
+      if (artwork) {
+        art.classList.toggle('is-reference-art', isTransitionSong);
+        const image = document.createElement('img'); image.src = artwork; image.alt = ''; image.referrerPolicy = 'no-referrer';
         art.append(image);
       }
       row.dataset.song = title;
@@ -250,23 +328,39 @@ window.createMusicGlobe = function () {
         songs.querySelectorAll('.world-song').forEach(item => { item.classList.toggle('is-selected', item === row); item.setAttribute('aria-pressed', String(item === row)); });
         document.getElementById('world-song-note').textContent = `已选「${title}」 · 前往客户端收听`;
       });
+      row.addEventListener('focus', () => {
+        if (row.matches(':focus-visible')) songs.scrollTo({ top: index * songStep, behavior: motion.matches ? 'instant' : 'smooth' });
+      });
       songs.append(row);
     });
+    scrollInputUntil = 0; toothDistance = 0;
+    layoutSongs(2.5);
+  }
+  function layoutSongs(center = songs.scrollTop / songStep) {
+    songStep = Math.max(1, songs.clientHeight * .18);
+    const track = songs.querySelector('.song-scroll-track');
+    if (track) track.style.height = `${songs.clientHeight + songStep * 5}px`;
+    songs.scrollTop = songStep * Math.max(0, Math.min(5, center));
+    previousScroll = songs.scrollTop;
     curveSongs();
   }
   function curveSongs() {
     const size = songs.clientHeight;
     const orbit = size * .61;
+    const center = songs.scrollTop / songStep;
     songs.querySelectorAll('.world-song').forEach((row, index) => {
-      const theta = (index - 2.5) * 17 * radians;
+      const offset = index - center;
+      const theta = Math.max(-85, Math.min(85, offset * 17)) * radians;
       const y = Math.sin(theta) * orbit;
       // Masked containers flatten their children. Keep row centers on the
       // hit-test plane; tilt and foreshortening still describe the cylinder.
       const scale = 1000 / (1000 + (1 - Math.cos(theta)) * orbit);
-      const x = Math.abs(index - 2.5) * 12;
-      row.style.transform = `translate(${x}px,${y - row.clientHeight / 2}px) rotateX(${-theta / radians}deg) rotateY(-14deg) scale(${scale})`;
-      row.style.opacity = String(.96 - Math.abs(index - 2.5) * .22);
+      const x = Math.abs(offset) * 12;
+      row.style.transform = `translate(${x}px,${songs.scrollTop + y - row.clientHeight / 2}px) rotateX(${-theta / radians}deg) rotateY(-14deg) scale(${scale})`;
+      row.style.opacity = String(Math.max(0, .96 - Math.abs(offset) * .22));
+      row.style.pointerEvents = Math.abs(offset) > 3.8 ? 'none' : 'auto';
     });
+    songs.dataset.position = center.toFixed(3);
   }
   function aim(lon, lat) {
     const next = lon * radians;
@@ -279,7 +373,7 @@ window.createMusicGlobe = function () {
     const ratio = Math.min(devicePixelRatio || 1, 2);
     canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    radius = Math.min(width * .43, height * .43); centerX = width * .5; centerY = height * .5;
+    radius = Math.min(width * .48, height * (innerWidth > 800 ? .5 : .48)); centerX = width * .5; centerY = height * .5;
     curveSongs(); paint();
   }
   function paint() {
@@ -373,13 +467,14 @@ window.createMusicGlobe = function () {
   document.getElementById('globe-left').addEventListener('click', () => aim((targetYaw - .7) / radians, targetPitch / radians / .65));
   document.getElementById('globe-right').addEventListener('click', () => aim((targetYaw + .7) / radians, targetPitch / radians / .65));
   new ResizeObserver(dimensions).observe(stage);
+  new ResizeObserver(() => layoutSongs()).observe(songs);
   new IntersectionObserver(entries => { visible = entries[0].isIntersecting; if (visible) { dimensions(); start(); } else stop(); }, { threshold: .08 }).observe(section);
   new IntersectionObserver(entries => {
     document.body.classList.toggle('world-player-mode', entries[0].isIntersecting);
   }, { rootMargin: '-35% 0px -35% 0px' }).observe(section);
   document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
   motion.addEventListener('change', () => { if (motion.matches) stop(); else start(); paint(); });
-  select(selected); dimensions();
+  select(selected); dimensions(); syncGear();
   return { selectArtist(id) { const artist = artists.find(item => item.id === id); if (artist) { select(artist); aim(artist.lon, artist.lat); } } };
 };
 
@@ -436,7 +531,7 @@ window.createAlbumTransition = function ({ globe }) {
       const target = world.querySelector('.world-song[data-song="七里香"] .world-song-art');
       if (target) {
         const rect = target.getBoundingClientRect();
-        const toCenter = ease(0, .44, progress), toSong = ease(.54, 1, progress);
+        const toCenter = ease(0, .44, progress), toSong = ease(.54, .97, progress);
         // A rotated square must cover both viewport axes before it becomes a song.
         const middleWidth = Math.max(innerWidth, innerHeight) * 1.35;
         const middleX = innerWidth * .50, middleY = innerHeight * .50;

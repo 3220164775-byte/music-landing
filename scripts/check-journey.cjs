@@ -34,11 +34,13 @@ const fs = require('node:fs');
     await cardsScreen();
     await page.mouse.move(1, 999);
     const fallingCard = page.locator('.cover-stream-card[data-record="adele"]');
+    const fallStarted = Date.now();
     const above = await fallingCard.boundingBox();
     await page.waitForTimeout(1600);
     const below = await fallingCard.boundingBox();
     assert.ok(below.y - above.y > 120, 'A cover falls downward into the scattered layout');
     await page.waitForFunction(() => [...document.querySelectorAll('.cover-stream-card')].every(card => card.dataset.layer === 'scattered'));
+    assert.ok(Date.now() - fallStarted < 3000, 'All covers arrive promptly instead of waiting through a long stagger');
     const layout = await page.locator('.cover-stream-card').evaluateAll(nodes => nodes.map(node => { const r = node.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; }));
     assert.ok(Math.max(...layout.map(r => r.x)) - Math.min(...layout.map(r => r.x)) > 900, 'Album covers scatter across both sides of the central heading');
     const clock = await page.locator('#cover-stream').getAttribute('data-clock');
@@ -122,6 +124,8 @@ const fs = require('node:fs');
     assert.equal(await page.locator('.cover-transition-card').evaluate(element => getComputedStyle(element).visibility), 'hidden');
     assert.equal(await page.locator('.world-song').count(), 6);
     assert.equal(await page.locator('#world-artist-name').textContent(), '周杰伦');
+    assert.equal(await page.locator('.world-song[data-song="七里香"] img').getAttribute('src'), './assets/rotation-cover-reference.png', 'The supplied image remains in the song row after the transition ends');
+    assert.equal(await page.locator('.world-song[data-song="七里香"] img').evaluate(image => getComputedStyle(image).objectFit), 'contain', 'The landed thumbnail preserves the entire reference image');
     await page.screenshot({ path: path.join(output, 'world-desktop.png') });
     const globeBounds = await page.locator('#music-globe').boundingBox();
     await page.mouse.move(globeBounds.x + globeBounds.width * .2, globeBounds.y + globeBounds.height * .8);
@@ -130,12 +134,14 @@ const fs = require('node:fs');
     await page.mouse.move(globeBounds.x + globeBounds.width * .6, globeBounds.y + globeBounds.height * .8, { steps: 10 });
     await page.waitForTimeout(350);
     assert.ok(Math.abs(Number(await page.locator('#world').getAttribute('data-longitude')) - beforeHoverMove) > 35, 'Mouse movement rotates the globe without pressing any button');
-    for (const id of ['adele', 'billie', 'anitta', 'tyla', 'bts']) {
+    for (const id of ['jay', 'utada', 'adele', 'daft', 'billie', 'weeknd', 'anitta', 'tyla', 'bts']) {
       await page.locator(`.world-region[data-artist="${id}"]`).click();
       await page.waitForTimeout(1200);
       assert.equal(await page.locator('#world').getAttribute('data-artist'), id);
       assert.equal(await page.locator(`.globe-pin[data-artist="${id}"]`).isVisible(), true, `Selected artist ${id} faces the lens`);
       assert.equal(await page.locator('.world-song').count(), 6);
+      await page.waitForFunction(() => [...document.querySelectorAll('.world-song-art img')].every(image => image.complete && image.naturalWidth > 0));
+      assert.equal(await page.locator('.world-song-art img').evaluateAll(images => new Set(images.map(image => image.src)).size), 6, `${id} shows six different display artworks`);
     }
     await page.evaluate(() => {
       window.hoverTrace = [];
