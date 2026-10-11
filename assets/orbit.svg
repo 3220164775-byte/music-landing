@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title">
+<title id="title">Slow Orbit — original cover art</title>
+<defs><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".12"/></feComponentTransfer><feBlend in="SourceGraphic" mode="soft-light"/></filter></defs>
+<rect width="600" height="600" fill="#1b2420"/>
+<g stroke="#8b897d" fill="none" stroke-width="1" opacity=".5"><ellipse cx="300" cy="335" rx="273" ry="117" transform="rotate(-27 300 335)"/><ellipse cx="300" cy="335" rx="273" ry="117" transform="rotate(27 300 335)"/><circle cx="300" cy="335" r="258"/></g>
+<ellipse cx="300" cy="239" rx="45" ry="128" fill="#e6a7c1" transform="rotate(0 300 335)"/><ellipse cx="300" cy="239" rx="45" ry="128" fill="#e6a7c1" transform="rotate(45 300 335)"/><ellipse cx="300" cy="239" rx="45" ry="128" fill="#e6a7c1" transform="rotate(90 300 335)"/><ellipse cx="300" cy="239" rx="45" ry="128" fill="#e6a7c1" transform="rotate(135 300 335)"/><ellipse cx="300" cy="239" rx="45" ry="128" fill="#e6a7c1" transform="rotate(180 300 335)"/><ellipse cx="300" cy="239" rx="45" ry="128" fill="#e6a7c1" transform="rotate(225 300 335)"/><ellipse cx="300" cy="239" rx="45" ry="128" fill="#e6a7c1" transform="rotate(270 300 335)"/><ellipse cx="300" cy="239" rx="45" ry="128" fill="#e6a7c1" transform="rotate(315 300 335)"/><circle cx="300" cy="335" r="57" fill="#1b2420"/><circle cx="300" cy="335" r="34" fill="#eae6cc"/><circle cx="300" cy="335" r="7" fill="#1b2420"/>
+<text x="28" y="71" fill="#eae6cc" font-family="Arial,sans-serif" font-weight="900" font-size="62" letter-spacing="-3">SLOW ORBIT</text><text x="32" y="104" fill="#eae6cc" font-family="monospace" font-size="12" letter-spacing="3">MOVE AT YOUR OWN PACE.</text>
+<text x="32" y="566" fill="#eae6cc" font-family="monospace" font-size="12" letter-spacing="2">23:59 / THE QUIET SIDE OF LIFE</text>
+<rect width="600" height="600" opacity=".14" filter="url(#grain)"/>
+</svg>

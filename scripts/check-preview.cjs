@@ -1,0 +1,183 @@
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+(async () => {
+  const launchOptions = { headless: true, args: ['--no-first-run'] };
+  if (process.env.PLAYWRIGHT_BROWSER_EXECUTABLE) launchOptions.executablePath = process.env.PLAYWRIGHT_BROWSER_EXECUTABLE;
+  const browser = await chromium.launch(launchOptions);
+  const output = path.resolve(__dirname, '../output');
+  fs.mkdirSync(output, { recursive: true });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
+  const errors = [];
+  const failed = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('response', response => { if (response.status() >= 400) failed.push(`${response.status()} ${response.url()}`); });
+  async function goStory(progress) {
+    await page.evaluate(p => {
+      const sequence = document.getElementById('intro-sequence');
+      const start = sequence.getBoundingClientRect().top + scrollY;
+      const range = sequence.offsetHeight - sequence.querySelector('.intro-viewport').offsetHeight;
+      window.scrollTo({ top: start + range * p, behavior: 'instant' });
+    }, progress);
+    try {
+      await page.waitForFunction(p => Math.abs(Number(document.getElementById('intro-sequence').dataset.progress) - p) < (p === 0 ? .005 : .002), progress);
+    } catch (error) {
+      console.log('Story position', await page.evaluate(() => ({ scroll: scrollY, progress: document.getElementById('intro-sequence').dataset.progress, height: innerHeight, sequence: document.getElementById('intro-sequence').offsetHeight, focused: document.activeElement.id })));
+      throw error;
+    }
+  }
+  try {
+    const response = await page.goto(process.env.PREVIEW_URL || 'http://127.0.0.1:8080/', { waitUntil: 'networkidle' });
+    assert.equal(response.status(), 200);
+    assert.equal(await page.locator('#home').evaluate(element => element.clientHeight), 1000);
+    assert.equal(await page.locator('#experience').evaluate(element => element.inert), true);
+    await page.screenshot({ path: path.join(output, 'desktop.png') });
+    await goStory(.14);
+    assert.equal(await page.locator('.intro-viewport').evaluate(element => Math.round(element.getBoundingClientRect().top)), 0);
+    assert.equal(await page.locator('#hero-turntable').evaluate(element => element.classList.contains('tt-scroll-playing')), true);
+    assert.ok(await page.locator('#turntable-arm').evaluate(element => element.style.transform.includes('rotate(')));
+    assert.ok(Number(await page.locator('#water-displacement').getAttribute('scale')) > 20);
+    const waterPhase = await page.locator('#intro-water-surface').getAttribute('data-phase');
+    await page.waitForTimeout(180);
+    assert.notEqual(await page.locator('#intro-water-surface').getAttribute('data-phase'), waterPhase);
+    await page.screenshot({ path: path.join(output, 'intro-needle.png') });
+    await goStory(.4);
+    const firstBlur = await page.locator('#home').evaluate(element => Number.parseFloat(getComputedStyle(element).filter.match(/blur\(([\d.]+)px\)/)[1]));
+    assert.ok(firstBlur > 10);
+    await page.screenshot({ path: path.join(output, 'intro-blur.png') });
+    await goStory(.66);
+    const revealRadius = await page.locator('#intro-sequence').evaluate(element => Number.parseFloat(element.style.getPropertyValue('--reveal-radius')));
+    assert.ok(revealRadius > 0 && revealRadius < 600);
+    assert.ok(await page.locator('#home').evaluate(element => Number.parseFloat(getComputedStyle(element).filter.match(/blur\(([\d.]+)px\)/)[1])) > firstBlur);
+    await page.screenshot({ path: path.join(output, 'intro-center-reveal.png') });
+    await goStory(1);
+    assert.equal(await page.locator('#experience').evaluate(element => element.inert), false);
+    assert.equal(await page.locator('#home').evaluate(element => element.inert), true);
+    assert.equal(await page.locator('#experience').evaluate(element => getComputedStyle(element).filter), 'blur(0px)');
+    await page.screenshot({ path: path.join(output, 'intro-second-screen.png') });
+    await goStory(0);
+    assert.equal(await page.locator('#home').evaluate(element => element.inert), false);
+    assert.equal(await page.locator('#experience').evaluate(element => element.inert), true);
+    assert.equal(await page.locator('main section').count(), 4);
+    await page.locator('#hero-play').click();
+    await page.waitForFunction(() => !audio.paused && audio.currentTime > .2);
+    assert.equal(await page.locator('#mini-player').isVisible(), true);
+    assert.equal(await page.locator('#sound-switch').getAttribute('aria-pressed'), 'true');
+    assert.equal(await page.locator('#turntable-play').getAttribute('aria-pressed'), 'true');
+    const firstAngle = await page.locator('#turntable-vinyl').evaluate(element => element.style.transform);
+    await page.waitForTimeout(1600);
+    assert.notEqual(await page.locator('#turntable-vinyl').evaluate(element => element.style.transform), firstAngle);
+    await page.screenshot({ path: path.join(output, 'turntable-playing.png') });
+    await page.locator('[data-rpm="45"]').click();
+    assert.equal(await page.evaluate(() => audio.playbackRate), 1.35);
+    assert.equal(await page.locator('[data-rpm="45"]').getAttribute('aria-pressed'), 'true');
+    await page.locator('[data-rpm="33"]').click();
+    assert.equal(await page.evaluate(() => audio.playbackRate), 1);
+    await page.locator('#turntable-mute').click();
+    assert.equal(await page.evaluate(() => audio.muted && !audio.paused), true);
+    assert.equal(await page.locator('#sound-label').textContent(), '声音已静音');
+    await page.locator('#sound-switch').click();
+    assert.equal(await page.evaluate(() => !audio.muted && !audio.paused), true);
+    await page.locator('#turntable-reset').click();
+    assert.ok(await page.evaluate(() => audio.currentTime < .3));
+    await page.locator('#player-toggle').click();
+    assert.equal(await page.evaluate(() => audio.paused), true);
+    assert.equal(await page.locator('#sound-switch').getAttribute('aria-pressed'), 'false');
+    assert.equal(await page.locator('#turntable-play').getAttribute('aria-pressed'), 'false');
+    const pauseAngle = await page.locator('#turntable-vinyl').evaluate(element => element.style.transform);
+    await page.waitForTimeout(300);
+    assert.notEqual(await page.locator('#turntable-vinyl').evaluate(element => element.style.transform), pauseAngle);
+    await page.locator('#turntable-play').focus();
+    await page.keyboard.press('Space');
+    await page.waitForFunction(() => !audio.paused);
+    await page.locator('[data-rpm="45"]').click();
+    await goStory(0);
+    await page.locator('[data-rpm="33"]').click();
+    await page.locator('#player-close').click();
+    assert.equal(await page.locator('#mini-player').isVisible(), false);
+    assert.equal(await page.evaluate(() => audio.paused), true);
+    await page.locator('#hero-play').focus();
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => !audio.paused);
+    await page.locator('#player-close').click();
+    for (const width of [375, 390, 768, 1024, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await goStory(0);
+      await page.waitForTimeout(100);
+      const sizes = await page.evaluate(() => ({ inner: innerWidth, scroll: document.documentElement.scrollWidth }));
+      assert.ok(sizes.scroll <= sizes.inner, `Horizontal overflow at ${width}: ${sizes.scroll}`);
+      const layout = await page.evaluate(() => {
+        const turntable = document.querySelector('.tt-hint').getBoundingClientRect();
+        const footer = document.querySelector('.hero-footer').getBoundingClientRect();
+        const play = document.getElementById('hero-play').getBoundingClientRect();
+        const deck = document.querySelector('.tt-machine').getBoundingClientRect();
+        return { hintBottom: turntable.bottom, footerTop: footer.top, playBottom: play.bottom, deckTop: deck.top, deckLeft: deck.left, playRight: play.right };
+      });
+      assert.equal(await page.locator('#home').evaluate(element => element.clientHeight), 900);
+      assert.ok(layout.hintBottom < layout.footerTop + 5, `Turntable/footer overlap at ${width}`);
+      await goStory(1);
+      assert.ok(await page.locator('.cover-footer').evaluate(element => element.getBoundingClientRect().bottom < innerHeight), `Second screen footer overflow at ${width}`);
+    }
+    for (const viewport of [{ width: 375, height: 667 }, { width: 1024, height: 600 }]) {
+      await page.setViewportSize(viewport);
+      await goStory(0);
+      assert.equal(await page.locator('#home').evaluate(element => element.clientHeight), viewport.height);
+      await goStory(1);
+      const geometry = await page.evaluate(() => {
+        const heading = document.querySelector('.cover-heading').getBoundingClientRect();
+        const footer = document.querySelector('.cover-footer').getBoundingClientRect();
+        return { headingTop: heading.top, headingBottom: heading.bottom, footerTop: footer.top, footerBottom: footer.bottom };
+      });
+      assert.ok(geometry.headingTop >= 0 && geometry.footerBottom < viewport.height, 'Short-screen controls are visible');
+      assert.ok(geometry.headingBottom < geometry.footerTop, 'Short-screen heading does not overlap controls');
+      await page.screenshot({ path: path.join(output, `second-${viewport.width}x${viewport.height}.png`) });
+    }
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await goStory(0);
+    await page.locator('.nav-links a[href="#experience"]').click();
+    await page.waitForFunction(() => Number(document.getElementById('intro-sequence').dataset.progress) > .98);
+    assert.equal(await page.locator('#experience').evaluate(element => element.inert), false);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await goStory(0);
+    await page.screenshot({ path: path.join(output, 'mobile.png') });
+    await page.screenshot({ path: path.join(output, 'mobile-full.png'), fullPage: true });
+    await page.locator('#turntable-play').click();
+    await page.waitForFunction(() => !audio.paused);
+    await page.locator('[data-rpm="45"]').click();
+    assert.equal(await page.evaluate(() => audio.playbackRate), 1.35);
+    await page.locator('[data-rpm="33"]').click();
+    await page.locator('#turntable-play').click();
+    assert.equal(await page.evaluate(() => audio.paused), true);
+    await goStory(.66);
+    await page.screenshot({ path: path.join(output, 'mobile-center-reveal.png') });
+    await goStory(1);
+    await page.screenshot({ path: path.join(output, 'mobile-second-screen.png') });
+    await goStory(0);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.locator('#turntable-play').click();
+    await page.waitForFunction(() => !audio.paused);
+    const reducedAngle = await page.locator('#turntable-vinyl').evaluate(element => element.style.transform);
+    await page.waitForTimeout(250);
+    assert.equal(await page.locator('#turntable-vinyl').evaluate(element => element.style.transform), reducedAngle);
+    assert.equal(await page.locator('#experience').evaluate(element => element.inert), false);
+    assert.equal(await page.locator('.intro-viewport').evaluate(element => getComputedStyle(element).position), 'relative');
+    assert.equal(await page.locator('.intro-water').evaluate(element => getComputedStyle(element).display), 'none');
+    assert.equal(await page.evaluate(() => Array.from(document.images).every(image => image.complete && image.naturalWidth > 0)), true);
+    assert.deepEqual(errors, []);
+    assert.deepEqual(failed, []);
+    const gesturePage = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    await gesturePage.goto(process.env.PREVIEW_URL || 'http://127.0.0.1:8080/');
+    await gesturePage.keyboard.press('PageDown');
+    await gesturePage.waitForFunction(() => !audio.paused && Number(document.getElementById('intro-sequence').dataset.progress) > .025);
+    await gesturePage.locator('#player-close').click();
+    await gesturePage.mouse.wheel(0, 150);
+    await gesturePage.waitForTimeout(200);
+    assert.equal(await gesturePage.evaluate(() => audio.paused), true, 'Scrolling does not restart manually closed audio');
+    await gesturePage.close();
+    console.log('PASS: full-screen desktop/mobile, scroll-driven needle/ripples/blur/center reveal/reversal, four-screen structure, audio, inertia, speed, mute, reset, keyboard controls, reduced motion, no browser errors.');
+  } finally {
+    await browser.close();
+  }
+})().catch(error => { console.error(error); process.exitCode = 1; });

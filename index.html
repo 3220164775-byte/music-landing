@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <meta name="description" content="让热爱，有回响。一个关于听歌、发现和分享的网易云音乐产品介绍概念页面。">
+  <title>网易云音乐 · 让热爱，有回响</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./turntable.css">
+  <link rel="stylesheet" href="./intro.css">
+  <link rel="stylesheet" href="./journey.css?v=20261011-cover2">
+  <link rel="stylesheet" href="./resonance.css?v=20261011-cosmos10">
+  <link rel="stylesheet" href="./stage-theme.css?v=20261011-cosmos10">
+  <script src="./turntable.js" defer></script>
+  <script src="./intro.js?v=20261011-water7" defer></script>
+  <script src="./assets/world-land.js" defer></script>
+  <script src="./assets/cover-catalog.js?v=20261011-cover2" defer></script>
+  <script src="./journey.js?v=20261011-cover2" defer></script>
+  <script src="./resonance.js?v=20261011-cosmos10" defer></script>
+  <script src="./app.js?v=20261011-cosmos10" defer></script>
+</head>
+<body>
+  <svg class="water-filter-defs" width="0" height="0" aria-hidden="true"><defs><filter id="intro-water-refraction" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage id="water-displacement-image" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="waterNormals"/><feDisplacementMap id="water-displacement" in="SourceGraphic" in2="waterNormals" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header">
+    <nav class="ticket-nav" aria-label="主导航">
+      <a class="brand" href="#home" aria-label="网易云音乐，回到首页">
+        <svg class="brand-icon" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="currentColor"/><path d="M24 8v16.5c0 4-3.2 7-7 7-4.4 0-7.5-3-7.5-6.6s2.9-6.5 6.8-6.5c2.2 0 4 .9 5.2 2.6M24 9l6 5" fill="none" stroke="#f4b9d1" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>网易云音乐<small>NETEASE CLOUD MUSIC</small></span>
+      </a>
+      <div class="nav-links"><a href="#experience">封面漫游</a><a href="#world">环球音乐</a><a href="#resonance">连接世界</a></div>
+      <button class="sound-switch" id="sound-switch" type="button" aria-pressed="false"><span class="tiny-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span id="sound-label">开启声音</span></button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="intro-sequence" id="intro-sequence">
+    <div class="intro-viewport">
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-orbit" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <div class="hero-content">
+        <div class="eyebrow"><span class="live-dot"></span> MUSIC CONNECTS US <span class="edition">VOL. 01 / 音乐，让我们相遇</span></div>
+        <h1 id="hero-title">让热爱，<br><span class="title-last">有回响<span class="title-period">。</span></span></h1>
+        <div class="hero-bottom">
+          <p>把日常交给音乐。<br>从熟悉的旋律，到下一首心动。</p>
+          <button class="button button-pink" id="hero-play" type="button"><span class="play-icon" aria-hidden="true">▶</span><span id="hero-play-label">开启声音 · 向下探索</span><span class="button-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button>
+        </div>
+      </div>
+      <div class="record-stage" id="hero-turntable">
+        <div class="record-caption" aria-hidden="true"><span>EVERY SOUND.<br>EVERY STORY.</span><span class="record-star">✳</span></div>
+        <div class="tt-wrap">
+          <div class="tt-machine">
+            <div class="tt-art" aria-hidden="true">
+              <div class="tt-plinth"></div>
+              <div class="tt-platter"><div class="tt-vinyl" id="turntable-vinyl"><div class="tt-label"><span class="tt-label-top">SIDE A · 云音乐</span><strong id="turntable-title">夜航</strong><span class="tt-label-bottom" id="turntable-rpm">33⅓ RPM</span></div></div></div>
+              <div class="tt-sheen"></div><div class="tt-spindle"></div>
+              <div class="tt-arm" id="turntable-arm"><div class="tt-arm-bar"><div class="tt-counterweight"></div><div class="tt-headshell"><div class="tt-stylus"></div></div></div><div class="tt-pivot"></div></div>
+              <div class="tt-rest"></div><div class="tt-led"></div>
+              <span class="tt-brand">CLOUD / ANALOG SERIES 01</span>
+            </div>
+            <button class="tt-play" id="turntable-play" type="button" aria-label="点击唱片机，播放夜航的原创试听" aria-pressed="false" aria-describedby="turntable-hint"></button>
+            <div class="tt-controls">
+              <button class="tt-knob" id="turntable-mute" type="button" aria-label="静音" aria-pressed="false"><span class="sr-only">静音</span></button>
+              <div class="tt-speed" role="group" aria-label="唱片转速"><button type="button" data-rpm="33" aria-pressed="true" aria-label="33 又三分之一转，正常速度">33</button><button type="button" data-rpm="45" aria-pressed="false" aria-label="45 转，加快播放">45</button></div>
+              <button class="tt-reset" id="turntable-reset" type="button" aria-label="从头播放" disabled>↺</button>
+            </div>
+          </div>
+        </div>
+        <p class="tt-hint" id="turntable-hint"><span class="tt-hint-icon" aria-hidden="true">↓</span><span id="turntable-hint-text">向下滑动，让唱针落下。</span></p>
+      </div>
+      <div class="hero-footer"><a class="scroll-cue" href="#experience"><span class="scroll-circle" aria-hidden="true">↓</span><span>向下探索<br><small>SCROLL TO FEEL</small></span></a><span class="hero-note">戴上耳机，世界是你的。<span aria-hidden="true">↘</span></span></div>
+      <div class="cursor-trail" id="cursor-trail" aria-hidden="true"></div>
+    </section>
+
+    <section class="experience section-pad" id="experience" aria-labelledby="experience-title">
+      <div class="stage-atmosphere" aria-hidden="true"><i></i><i></i></div>
+      <div class="section-kicker"><span>02 / RECORDS IN MOTION</span><span>停在心动的那一张。</span></div>
+      <div class="cover-heading"><h2 id="experience-title">让封面，<br><span>先打动你。</span></h2><p>每一张封面，都是一个新世界。<br>鼠标停留，让喜欢多停一会儿。</p></div>
+      <div class="cover-stream" id="cover-stream" role="group" aria-label="十七张真实专辑封面与一张用户提供的转场图片错落洒下"></div>
+      <span class="cover-backdrop" aria-hidden="true">SOUND IN SIGHT.</span>
+      <div class="cover-footer"><div class="cover-current"><span class="cover-index" id="cover-index">01 / 18</span><strong id="cover-current-title">七里香</strong><span id="cover-stream-status" role="status">封面错落飘落 · 悬停即可停住</span></div><a class="cover-next" href="#world">下一站，环球音乐 <span aria-hidden="true">↓</span></a><button class="cover-motion-toggle" id="cover-motion-toggle" type="button" aria-pressed="false">Ⅱ 暂停飘落</button></div>
+    </section>
+    <div class="intro-water" aria-hidden="true"><canvas id="intro-water-surface"></canvas></div>
+    <div class="intro-progress" aria-hidden="true"><span>01</span><div><i></i></div><span>02</span></div>
+    </div>
+    </div>
+
+    <section class="world-section" id="world" aria-labelledby="world-title">
+      <div class="stage-atmosphere" aria-hidden="true"><i></i><i></i></div>
+      <div class="section-kicker"><span>03 / A WORLD OF SOUND</span><span>转动世界，遇见不同的声音。</span></div>
+      <div class="world-heading"><h2 id="world-title">音乐，<span>没有边界。</span></h2><span>09 ARTISTS / ONE PLANET</span></div>
+      <div class="world-layout">
+        <div class="world-globe">
+          <div class="globe-stage" id="globe-stage"><canvas id="music-globe" tabindex="0" role="img" aria-label="可旋转的音乐地球，鼠标悬停并移动即可旋转，手机滑动或使用方向键旋转，使用下方国家按钮选择歌手"></canvas><div class="globe-pins" id="globe-pins"></div><span class="globe-lens-label" aria-hidden="true">FISHEYE / SOUND ATLAS</span></div>
+          <div class="globe-tools"><button id="globe-left" type="button" aria-label="地球向左转动">←</button><span><span class="globe-mouse-instructions">移动鼠标 · 悬停歌手</span><span class="globe-touch-instructions">滑动地球 · 点选歌手</span><br><small>MOVE TO EXPLORE / HOVER TO MEET</small></span><button id="globe-right" type="button" aria-label="地球向右转动">→</button></div>
+        </div>
+        <aside class="artist-panel" aria-labelledby="world-artist-name"><div class="artist-profile"><span class="artist-profile-label">ARTIST SPOTLIGHT / 歌手主页</span><div class="artist-title-row"><h3 id="world-artist-name">周杰伦</h3><span id="world-artist-region">中国 · 台北</span></div><p id="world-artist-album">七里香 / COMMON JASMINE ORANGE</p></div><div class="song-cylinder" id="world-song-list" role="group" aria-label="歌手歌曲列表"></div><p class="artist-song-note" id="world-song-note" role="status">曲目展示 · 完整音乐请在客户端收听</p></aside>
+      </div>
+      <div class="world-footer"><span>选择一个国家，启程。</span><div class="world-regions" id="world-regions" role="group" aria-label="按国家选择歌手"></div></div>
+    </section>
+
+    <section class="resonance-section" id="resonance" aria-labelledby="resonance-title">
+      <div class="resonance-viewport">
+      <div class="cosmos-backdrop" aria-hidden="true"><div class="cosmos-nebula"></div><canvas id="cosmic-field"></canvas><div class="cosmos-shade"></div></div>
+      <div class="listener-network" id="listener-network"><canvas id="connection-field" aria-label="随下滑扩展的人物音乐连接网，虚构听众的概念展示" role="img"></canvas></div>
+      <div class="section-kicker resonance-kicker"><span>04 / MUSIC CONNECTS US</span><span>越听，世界越近。</span></div>
+      <div class="network-scale"><span id="connection-count">04 / 108</span><small>概念连接图 · 虚构听众</small><span class="network-progress"><i></i></span></div>
+      <div class="resonance-copy">
+        <div class="resonance-label"><span></span> DIFFERENT PLACES. SAME SONG.</div>
+        <h2 id="resonance-title">一首歌，<span>连接全世界。</span></h2>
+        <p>从几个人的相遇，到无数人的同频。<span class="network-scroll-hint">继续下滑，看音乐把我们连接起来。 ↓</span></p>
+        </div>
+      <div class="network-controls"><button class="resonance-play" id="resonance-play" type="button" aria-pressed="false"><span class="resonance-play-icon" aria-hidden="true">▶</span><span id="resonance-play-label">开启声音 · 连接世界</span><span class="resonance-button-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button>
+        <span class="resonance-state" id="resonance-state" role="status">听一段旋律，让我们相遇。</span>
+      </div>
+      <div class="resonance-footer">
+        <div><strong>让热爱，有回响。</strong><span>网易云音乐 · 非官方概念设计</span></div>
+        <a class="resonance-download" href="https://music.163.com/#/download" target="_blank" rel="noopener noreferrer">把心动，带进每一天 <span aria-hidden="true">↗</span><small>前往官网下载网易云音乐</small></a>
+        <a class="resonance-top" href="#home" aria-label="回到首页">↑</a>
+      </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="mini-player" id="mini-player" aria-label="原创示例音乐播放器" hidden><img id="player-art" src="./assets/nightflight.svg" alt="" width="44" height="44"><div class="player-track"><strong id="player-title">夜航</strong><span>原创试听 · <span id="player-time">00:00</span></span></div><div class="player-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><button id="player-toggle" class="player-control" type="button" aria-label="暂停试听">Ⅱ</button><button id="player-close" class="player-close" type="button" aria-label="关闭播放器">×</button><div class="player-progress" id="player-progress"></div></aside>
+  <p class="sr-only" id="audio-status" role="status"></p>
+</body>
+</html>

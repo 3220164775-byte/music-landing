@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title">
+<title id="title">Echoes — original cover art</title>
+<defs><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".12"/></feComponentTransfer><feBlend in="SourceGraphic" mode="soft-light"/></filter></defs>
+<rect width="600" height="600" fill="#d5d796"/>
+<defs><linearGradient id="echo" x2="1" y2="1"><stop stop-color="#dfdc8d"/><stop offset="1" stop-color="#b1cb95"/></linearGradient><radialGradient id="orb" cx="35%" cy="25%"><stop stop-color="#fcffcc"/><stop offset=".4" stop-color="#aad88b"/><stop offset=".68" stop-color="#2a6045"/><stop offset="1" stop-color="#173d2c"/></radialGradient></defs>
+<rect width="600" height="600" fill="url(#echo)"/><g transform="rotate(-32 306 309)"><ellipse cx="306" cy="309" rx="290" ry="226" fill="none" stroke="#3c6950" stroke-width="2"/><ellipse cx="306" cy="309" rx="252" ry="196" fill="none" stroke="#3c6950" stroke-width="10"/><ellipse cx="306" cy="309" rx="224" ry="174" fill="none" stroke="#3c6950" stroke-width="2"/><ellipse cx="306" cy="309" rx="203" ry="158" fill="none" stroke="#3c6950" stroke-width="18"/><ellipse cx="306" cy="309" rx="174" ry="135" fill="none" stroke="#3c6950" stroke-width="2"/><ellipse cx="306" cy="309" rx="155" ry="120" fill="none" stroke="#3c6950" stroke-width="22"/><ellipse cx="306" cy="309" rx="118" ry="92" fill="none" stroke="#3c6950" stroke-width="2"/><ellipse cx="306" cy="309" rx="95" ry="74" fill="none" stroke="#3c6950" stroke-width="19"/><ellipse cx="306" cy="309" rx="58" ry="45" fill="none" stroke="#3c6950" stroke-width="2"/></g>
+<ellipse cx="305" cy="310" rx="62" ry="50" fill="url(#orb)" transform="rotate(-32 305 310)"/>
+<text x="25" y="87" fill="#254f3b" font-family="Arial,sans-serif" font-weight="900" font-size="92" letter-spacing="-5">ECHOES</text><text x="32" y="115" fill="#254f3b" font-family="monospace" font-size="12" letter-spacing="3">SOME SOUNDS STAY WITH YOU.</text>
+<text x="32" y="566" fill="#254f3b" font-family="monospace" font-size="12" letter-spacing="2">A MOMENT TO YOURSELF / VOL. 004</text>
+<rect width="600" height="600" opacity=".14" filter="url(#grain)"/>
+</svg>

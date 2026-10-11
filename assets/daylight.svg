@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title">
+<title id="title">Daylight — original cover art</title>
+<defs><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".12"/></feComponentTransfer><feBlend in="SourceGraphic" mode="soft-light"/></filter></defs>
+<rect width="600" height="600" fill="#b6dbc9"/>
+<defs><linearGradient id="day" x2="1" y2="1"><stop stop-color="#b6dbc9"/><stop offset="1" stop-color="#759bab"/></linearGradient></defs><rect width="600" height="600" fill="url(#day)"/>
+<path d="M0 410Q150 280 310 420T600 400V600H0Z" fill="#a8be64"/><path d="M0 490Q140 355 320 475T600 440V600H0Z" fill="#d1d784"/>
+<circle cx="397" cy="227" r="124" fill="#f5e59e"/>
+<g fill="none" stroke="#234b41" stroke-width="2"><path d="M80 600Q90 210 280 180M67 410Q170 410 217 315M83 343Q28 298 0 282M97 280Q150 235 182 228"/></g>
+<g fill="#234b41"><ellipse cx="158" cy="380" rx="67" ry="21" transform="rotate(-37 158 380)"/><ellipse cx="52" cy="312" rx="65" ry="19" transform="rotate(35 52 312)"/><ellipse cx="177" cy="248" rx="72" ry="20" transform="rotate(-30 177 248)"/><ellipse cx="228" cy="202" rx="58" ry="15" transform="rotate(-15 228 202)"/></g>
+<text x="29" y="75" fill="#234b41" font-family="Arial,sans-serif" font-weight="900" font-size="70" letter-spacing="-4">DAYLIGHT</text><text x="32" y="105" fill="#234b41" font-family="monospace" font-size="12" letter-spacing="2">LET THE GOOD DAYS IN.</text>
+<text x="32" y="567" fill="#234b41" font-family="monospace" font-size="12" letter-spacing="2">06:30 AM / A NEW BEGINNING</text>
+<rect width="600" height="600" opacity=".14" filter="url(#grain)"/>
+</svg>

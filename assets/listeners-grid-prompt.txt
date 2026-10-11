@@ -1,0 +1,7 @@
+Mode: built-in image_gen
+Use case: photorealistic-natural
+Asset type: photographic portrait contact sheet for a music landing page listener network
+Primary request: Create ONE square 4 by 4 grid of SIXTEEN distinct fictional adult music listeners. Exactly 16 equally sized square cells, edge to edge without gutters, borders, captions or text. Each cell is a standalone head and shoulders editorial portrait, face centered and fully contained in that square, with some shoulders visible; usable as separate square avatar backgrounds.
+Subjects: diverse adult women and men, ages 20 to 65, representing listeners around the world: varied East Asian, South Asian, African, European, Middle Eastern and Latin American appearances. Different individual faces, hairstyles and everyday clothes. Some wearing subtle headphones or earbuds, some simply listening thoughtfully. Quiet natural expressions, candid, no celebrities.
+Style: natural cinematic photography, gentle grain, realistic skin texture, individual dim city/studio/home backgrounds, moody dark navy and muted violet color grading, soft sidelight, good readable faces. Faces fairly large in each cell. Mix of warm and cool light with restrained cyan and violet accents.
+Constraints: precisely aligned 4 columns and 4 rows; square image; no inset margins, no logos, no frames, no lettering, no UI, no watermark.

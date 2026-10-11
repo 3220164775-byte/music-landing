@@ -1,0 +1,170 @@
+/* The music venue palette is confined to scenes 02–04. */
+/* Navigation opts into smooth scrolling explicitly; focus stays deterministic. */
+html{scroll-behavior:auto}
+#experience,#world,#resonance,.cover-transition-card{--stage-ink:#f8f6ff;--stage-muted:#b1a6cf;--stage-purple:#a535ee;--stage-cyan:#77e5ef;--pink:#b688ff;color:var(--stage-ink)}
+#experience,#world,#resonance{background:#100d26}
+.stage-atmosphere{position:absolute;inset:0;z-index:-3;pointer-events:none;overflow:hidden;background:linear-gradient(180deg,#100d261a,#100d26a6 70%,#100d26eb),url('./assets/stage-concert.jpg') center/cover no-repeat}
+.stage-atmosphere:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#100d2644,#180d3866 50%,#100d2633)}
+.stage-atmosphere:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 10% 30%,#8434dd28,transparent 50%),radial-gradient(ellipse at 95% 65%,#12c8e01c,transparent 45%)}
+.stage-atmosphere i{position:absolute;top:-40%;left:-6%;width:28%;height:155%;transform:rotate(-33deg);transform-origin:top center;background:linear-gradient(180deg,#ad47ff6b,transparent 82%);filter:blur(35px);opacity:.45;animation:stage-light-breathe 10s ease-in-out infinite alternate}
+.stage-atmosphere i+i{left:auto;right:7%;width:14%;transform:rotate(30deg);background:linear-gradient(180deg,#43dce651,transparent 75%);animation-delay:-5s}
+#experience .stage-atmosphere{opacity:.88;background-position:center 58%}
+#experience .section-kicker{color:#c3b3de;border-color:#c4a4f238;background:transparent;text-shadow:0 2px 14px #100d26}
+.cover-heading:before{background:radial-gradient(ellipse,#100d26e6 30%,#100d26b3 48%,#100d2600 72%)}
+#experience .cover-heading h2,.cover-heading h2 span{color:#fff;font-weight:850;text-shadow:0 5px 30px #0c062b66}
+.cover-heading p{color:#c8bfdc}
+.cover-card-face{background:transparent;border:0;border-radius:0;box-shadow:8px 15px 30px #03011566;padding:0}
+.cover-card-face img{display:block}
+.cover-card-meta strong{color:#f6f0ff}
+.cover-card-meta small{color:#b7a6c9}
+.cover-card-meta>span:last-child{color:#d1c3ef;border-color:#a894c75c;background:#ffffff04}
+.cover-stream.is-held .cover-stream-card:not(.is-held) .cover-card-face{filter:saturate(.55) brightness(.72)}
+.cover-stream-card.is-held .cover-card-face,.cover-stream-card:focus-visible .cover-card-face{outline-color:#b677ff;box-shadow:0 0 0 5px #a535ee26,0 14px 48px #24044ca6}
+.cover-backdrop{color:#d0b7ff08}
+.cover-footer:before{background:linear-gradient(transparent,#100d26c9 50%,#100d26f5)}
+.cover-index,#cover-stream-status{color:#b3a3ca}
+.cover-next{border-color:#b38ad464;color:#ebe2ff}
+.cover-next span{color:#b883f4}
+.cover-motion-toggle{color:#fff;border-color:#b675e654;background:linear-gradient(115deg,#8224d7,#ac36e6);box-shadow:0 6px 25px #4f138044}
+.cover-motion-toggle:hover{background:linear-gradient(115deg,#9f40eb,#b649ee);color:#fff}
+.cover-transition-card .cover-card-face{background:transparent;border:0;box-shadow:0 18px 55px #0005}
+#world{background:radial-gradient(ellipse at 27% 43%,#201b47,#110e29 55%,#0d0b20)}
+#world .stage-atmosphere{opacity:.25;background-position:center 40%}
+#world .section-kicker{color:#baa7d7;border-color:#b390e333}
+.world-heading h2{color:#fff}
+.world-heading h2 span{color:#d2b6ff}
+.world-heading>span{color:#9e85bf}
+.artist-profile-label{color:#ad91d5}
+.artist-title-row h3{color:#e7d6ff;text-shadow:0 3px 30px #922dec2b}
+#world-artist-region{color:#c2b3da}
+#world-artist-album{color:#937eae}
+.globe-lens-label,.globe-tools small{color:#9c86c0}
+.globe-tools{color:#c7b8e4}
+.globe-tools button{border-color:#ab7ede66;background:#5d308e26;color:#e9dcff}
+.globe-tools button:hover{background:#8e2ee0;border-color:#af68e8;color:#fff}
+.artist-pin-name{background:#7f29c9;color:#fff;border:1px solid #c38ae866;box-shadow:0 5px 22px #1c083a99}
+.artist-pin-name:after{background:#7f29c9}
+.artist-pin-country{color:#c2b0e9}
+.globe-pin:hover .artist-avatar,.globe-pin.is-selected .artist-avatar{box-shadow:0 0 0 5px #a956ea36,0 0 30px #9f4ce447;transform:scale(1.08)}
+.world-song{color:#f0eaff;border-color:#c498ee30;background:linear-gradient(90deg,transparent,#a55ee60e 35%,#ccefff0b 72%,transparent)}
+.world-song:hover,.world-song.is-selected{background:linear-gradient(90deg,transparent,#9e4ddb30 25%,#9e4ddb20 70%,transparent)}
+.world-song-number,.artist-song-note{color:#a38bbe}
+.world-song-mark{color:#ae7fea}
+.world-footer{border-color:#ad88d62b}
+.world-footer>span{color:#b5a2cf}
+.world-region{color:#bca9d6;border-color:#a277cb47;background:#130e2d66}
+.world-region[aria-pressed=true],.world-region:hover{background:linear-gradient(120deg,#802ace,#a33ee5);border-color:#b870e7;color:#fff;box-shadow:0 4px 16px #5b208344}
+#resonance{background:#100d26;color:#fff}
+#resonance .stage-atmosphere{opacity:.58;background-position:center bottom}
+.resonance-shade{background:radial-gradient(ellipse at 50% 47%,#100d26e6 0%,#100d26a8 23%,transparent 49%),linear-gradient(180deg,#100d2666,transparent 20%,transparent 74%,#100d26ed)}
+.resonance-kicker{border-color:#b695df3d;color:#bca7d8}
+.resonance-label{color:#b59cdc}
+.resonance-label>span{background:#b98dff;box-shadow:0 0 12px #a757e89c}
+.resonance-copy h2{color:#fff;text-shadow:0 4px 32px #08051544}
+.resonance-copy h2>span{color:#c6a1ff}
+.resonance-copy p{color:#c9bddb}
+.resonance-play{background:linear-gradient(115deg,#8527d6,#a335e5);border-color:#c37ceb4d;color:#fff;box-shadow:0 8px 30px #5c208046}
+.resonance-play:hover{background:linear-gradient(115deg,#9b39e8,#b141ec)}
+.resonance-state{color:#b19acb}
+.resonance-footer{border-color:#b898df38}
+.resonance-footer>div>span,.resonance-download small{color:#a995c3}
+.resonance-download{color:#efe7ff}
+.resonance-download>span{color:#b38af2}
+.resonance-top{color:#d4c4ef;border-color:#b18aca5c;background:#43246626}
+.resonance-top:hover{background:#8d2eda;color:#fff}
+body.world-player-mode .mini-player,body.resonance-player-mode .mini-player,body.intro-player-mode:has(#experience:not([inert])) .mini-player{background:#211737;color:#f4edff;border-color:#a16bcd66;box-shadow:0 8px 25px #05031377}
+body.world-player-mode .player-track>span,body.resonance-player-mode .player-track>span,body.intro-player-mode:has(#experience:not([inert])) .player-track>span{color:#b7a3cd}
+body.world-player-mode .player-control,body.resonance-player-mode .player-control,body.intro-player-mode:has(#experience:not([inert])) .player-control{background:#9234dc;color:#fff;border-color:#b884e6}
+body.world-player-mode .player-close,body.resonance-player-mode .player-close,body.intro-player-mode:has(#experience:not([inert])) .player-close{color:#c5b2dc}
+body.world-player-mode .player-progress,body.resonance-player-mode .player-progress,body.intro-player-mode:has(#experience:not([inert])) .player-progress{background:#8de2ef}
+#experience :focus-visible,#world :focus-visible,#resonance :focus-visible{outline-color:#87dfe9}
+@keyframes stage-light-breathe{to{opacity:.7;transform:rotate(-28deg)}}
+@media(max-width:800px){.stage-atmosphere{background-position:65% center}.stage-atmosphere i{width:47%;filter:blur(22px)}.stage-atmosphere i+i{width:24%}.cover-card-face{padding:0}}
+@media(prefers-reduced-motion:reduce){.stage-atmosphere i{animation:none}}
+/* Scroll out from a few listeners to an expanding world of shared music. */
+#resonance{height:320svh;min-height:0;overflow:visible;background:#09090f}
+.resonance-viewport{position:sticky;top:0;height:100svh;min-height:600px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 65% 40%,#171421,#09090f 78%)}
+.listener-network{position:absolute;inset:115px 5.4vw 280px;z-index:0;overflow:hidden}
+#connection-field{width:100%;height:100%;display:block}
+#resonance .resonance-copy{top:auto;bottom:142px;left:5.4vw;transform:none;text-align:left;width:min(80%,800px);z-index:2}
+#resonance .resonance-label{justify-content:flex-start;font-size:8px;letter-spacing:2px}
+#resonance .resonance-copy h2{font-size:clamp(35px,3.6vw,58px);letter-spacing:-2px;line-height:1.15;margin:18px 0 14px}
+#resonance .resonance-copy h2>span{color:#d0b7ed}
+#resonance .resonance-copy p{font-size:11px;color:#a99fb9;margin:0 0 17px;line-height:1.8}
+.network-scroll-hint{display:block;font-size:9px;letter-spacing:.5px;color:#85758e}
+#resonance .resonance-play{min-height:42px;font-size:10px;padding:0 18px;background:#654091;border-color:#a981bd55;box-shadow:none}
+#resonance .resonance-play:hover{background:#8156af}
+#resonance .resonance-state{font-size:8px;margin-top:10px;color:#9c8fad}
+#resonance .resonance-kicker,#resonance .resonance-footer{z-index:3}
+#resonance .resonance-footer{border-color:#9684ac33}
+.network-scale{position:absolute;right:5.4vw;bottom:146px;max-width:32%;z-index:2;display:flex;flex-direction:column;align-items:flex-end;gap:9px;color:#a699bc;font:10px var(--mono);letter-spacing:1px}
+.network-scale small{font-size:8px;letter-spacing:.3px;color:#776a86}
+.network-progress{height:1px;width:115px;display:block;background:#9781a433;margin-top:4px}
+.network-progress i{height:1px;width:100%;display:block;transform:scaleX(var(--network-progress,0));transform-origin:left;background:#b998d5}
+@media(max-height:750px) and (min-width:801px){.resonance-viewport{min-height:520px}.listener-network{inset:100px 5.4vw 245px}#resonance .resonance-copy{bottom:120px}#resonance .resonance-copy h2{font-size:34px;margin:12px 0 9px}#resonance .resonance-copy p{margin-bottom:12px}.network-scale{bottom:124px}}
+@media(max-width:800px){
+ .resonance-viewport{min-height:600px}
+ .listener-network{inset:98px 24px 350px}
+ #resonance .resonance-copy{left:24px;bottom:156px;width:calc(100% - 48px)}
+ #resonance .resonance-copy h2{font-size:31px;letter-spacing:-1px;margin:12px 0;line-height:1.12}
+ #resonance .resonance-copy h2>span{display:block}
+ #resonance .resonance-copy p{font-size:10px;letter-spacing:.2px;line-height:1.7;margin-bottom:14px}
+ #resonance .resonance-label{font-size:7px;letter-spacing:1.4px}
+ #resonance .resonance-state{font-size:7px;line-height:1.6}
+ .network-scroll-hint{font-size:8px}
+ .network-scale{top:78px;bottom:auto;right:24px;gap:4px;font-size:8px;max-width:60%;flex-direction:row;align-items:center}
+ .network-scale small{font-size:6px}.network-progress{display:none}
+ #resonance .resonance-footer{bottom:20px}
+}
+@media(max-width:800px) and (max-height:740px){.listener-network{inset:100px 24px 352px}#resonance .resonance-copy h2{font-size:27px}#resonance .resonance-copy p{font-size:9px}#resonance .resonance-copy{bottom:155px}}
+@media(prefers-reduced-motion:reduce){#resonance{height:100svh}.network-scroll-hint{display:none}.network-progress i{transform:scaleX(1)}}
+@media(min-width:801px){.listener-network{bottom:390px}}
+@media(max-height:750px) and (min-width:801px){.listener-network{bottom:315px}#resonance .resonance-copy h2{font-size:31px}}
+@media(max-width:800px){.listener-network{bottom:385px}}
+html:has(#resonance:target){scroll-padding-top:0}
+/* This scene has its own playback controls; keep the top slogan unobstructed. */
+body.resonance-player-mode .mini-player{display:none}
+/* A small heading crowns an expansive, irregular radial network. */
+#resonance .resonance-copy{top:27px;bottom:auto;left:50%;width:min(66%,700px);transform:translateX(-50%);text-align:center}
+#resonance .resonance-label{display:none}
+#resonance .resonance-copy h2{font-size:27px;letter-spacing:-.5px;line-height:1.25;margin:0 0 9px;font-weight:650}
+#resonance .resonance-copy h2>span{display:inline}
+#resonance .resonance-copy p{font-size:9px;line-height:1.6;letter-spacing:.3px;margin:0;color:#8c819e}
+#resonance .network-scroll-hint{font-size:8px;display:inline;margin-left:10px;color:#706480}
+#resonance .resonance-kicker{top:30px;left:4vw;right:4vw;border:0;padding:0;font-size:7px;pointer-events:none}
+#resonance .resonance-kicker>span:last-child{display:none}
+#resonance .listener-network{inset:110px 3vw 170px}
+.network-controls{position:absolute;left:4vw;bottom:111px;z-index:3}
+#resonance .network-controls .resonance-play{min-height:35px;font-size:9px;padding:0 15px;gap:10px}
+#resonance .network-controls .resonance-state{font-size:7px;margin-top:7px}
+#resonance .network-scale{bottom:115px;right:4vw}
+#resonance .resonance-footer{left:4vw;right:4vw;bottom:23px;padding-top:17px}
+#resonance .resonance-footer strong{font-size:12px}
+#resonance .resonance-footer>div>span{font-size:7px}
+@media(max-width:800px){
+ #resonance .resonance-copy{top:67px;width:calc(100% - 32px)}
+ #resonance .resonance-copy h2{font-size:21px;margin-bottom:6px;letter-spacing:0}
+ #resonance .resonance-copy p{font-size:8px}
+ #resonance .network-scroll-hint{display:block;margin-left:0;font-size:7px}
+ #resonance .resonance-kicker{top:27px;left:20px;right:20px;font-size:6px;letter-spacing:.7px}
+ #resonance .listener-network{inset:143px 12px 193px}
+ .network-controls{left:20px;bottom:130px}
+ #resonance .network-controls .resonance-play{min-height:31px;font-size:8px;padding:0 13px}
+ #resonance .network-controls .resonance-state{font-size:6px;margin-top:5px}
+ #resonance .network-scale{top:auto;bottom:145px;right:20px;max-width:32%;flex-direction:column;gap:5px;text-align:right}
+ #resonance .network-scale small{font-size:5px}
+ #resonance .resonance-footer{left:20px;right:20px;bottom:16px;padding-top:13px;gap:10px}
+ #resonance .resonance-footer .resonance-download{padding-top:10px;font-size:10px}
+ #resonance .resonance-footer .resonance-top{width:31px;height:31px;font-size:15px}
+}
+@media(max-height:750px) and (min-width:801px){#resonance .resonance-copy{top:22px}#resonance .resonance-copy h2{font-size:23px}#resonance .listener-network{inset:90px 3vw 146px}.network-controls{bottom:90px}#resonance .network-scale{bottom:94px}#resonance .resonance-footer{bottom:17px}}
+@media(max-height:750px) and (min-width:801px){#resonance .listener-network{bottom:155px}}
+/* A distant nebula and stars at different depths share the scrolling camera. */
+#resonance .resonance-viewport{background:#03050d}
+.cosmos-backdrop{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;background:#03050d}
+.cosmos-nebula{position:absolute;inset:-12%;background:radial-gradient(ellipse at 70% 38%,#26234b,transparent 65%),url('./assets/cosmos-nebula.jpg') center/cover no-repeat;opacity:.62;transform:translateY(var(--cosmos-shift,-28px)) scale(var(--cosmos-scale,1.24)) rotate(var(--cosmos-turn,-1.4deg));transform-origin:50% 47%;will-change:transform}
+#cosmic-field{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.78}
+.cosmos-shade{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 46%,#03050d26 10%,#03050d00 46%,#03050d80 100%),linear-gradient(180deg,#03050dd9,transparent 19%,transparent 65%,#03050deb 97%)}
+#resonance .listener-network{z-index:1}
+#resonance .resonance-copy h2{text-shadow:0 2px 22px #000}
+@media(prefers-reduced-motion:reduce){.cosmos-nebula{will-change:auto}}

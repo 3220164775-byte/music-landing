@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title">
+<title id="title">Violet Room — original cover art</title>
+<defs><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".12"/></feComponentTransfer><feBlend in="SourceGraphic" mode="soft-light"/></filter></defs>
+<rect width="600" height="600" fill="#351e54"/>
+<circle cx="430" cy="300" r="380" fill="none" stroke="#b78ff2" stroke-width="50"/><circle cx="430" cy="300" r="310" fill="none" stroke="#b78ff2" stroke-width="38"/><circle cx="430" cy="300" r="252" fill="none" stroke="#b78ff2" stroke-width="28"/><circle cx="430" cy="300" r="204" fill="none" stroke="#b78ff2" stroke-width="21"/><circle cx="430" cy="300" r="165" fill="none" stroke="#b78ff2" stroke-width="16"/><circle cx="430" cy="300" r="132" fill="none" stroke="#b78ff2" stroke-width="12"/><circle cx="430" cy="300" r="105" fill="none" stroke="#b78ff2" stroke-width="9"/><circle cx="430" cy="300" r="81" fill="none" stroke="#b78ff2" stroke-width="6"/><circle cx="430" cy="300" r="61" fill="none" stroke="#b78ff2" stroke-width="4"/><path d="M0 0H200V600H0Z" fill="#351e54" opacity=".2"/>
+<text x="30" y="59" fill="#efdebd" font-family="monospace" font-size="12" letter-spacing="3">NO PLANS. JUST RHYTHM.</text>
+<g fill="#efdebd" font-family="Arial,sans-serif" font-weight="900" font-size="112" letter-spacing="-7"><text x="27" y="191">VIOLET</text><text x="27" y="297">ROOM</text></g>
+<path d="m65 407 9 29 29 9-29 9-9 29-9-29-29-9 29-9z" fill="#efdebd"/>
+<text x="32" y="567" fill="#efdebd" font-family="monospace" font-size="12" letter-spacing="2">FIND YOUR OWN FREQUENCY.</text>
+<rect width="600" height="600" opacity=".14" filter="url(#grain)"/>
+</svg>
